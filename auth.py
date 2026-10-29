@@ -48,3 +48,11 @@ def obter_usuario_atual(token: str = Depends(oauth2_scheme), db: Session = Depen
     if usuario is None:
         raise credentials_exception
     return usuario
+
+def obter_administrador_atual(usuario_atual: models.UsuarioModel = Depends(obter_usuario_atual)):
+    if usuario_atual.perfil != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Acesso negado. Apenas administradores podem executar esta ação."
+        )
+    return usuario_atual

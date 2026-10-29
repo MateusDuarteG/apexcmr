@@ -116,3 +116,10 @@ def atualizar_estagio_oportunidade(
     db.commit()
     db.refresh(op)
     return op
+
+@app.get("/usuarios/", response_model=List[schemas.UsuarioResponse])
+def listar_usuarios(
+    db: Session = Depends(get_db), 
+    usuario_atual: models.UsuarioModel = Depends(auth.obter_administrador_atual)
+):
+    return db.query(models.UsuarioModel).all()
